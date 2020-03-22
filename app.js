@@ -10,9 +10,18 @@ app.use(
   "/graphql",
   graphQlHttp({
     schema: buildSchema(`
+        type RootQuery {
+            events: [String!]!
+
+        }
+
+        type RootMutation {
+
+        }
+
         schema{
-            query:
-            mutation
+            query: RootQuery
+            mutation: RootMutation 
         }
     `),
     rootValue: {}
@@ -20,3 +29,5 @@ app.use(
 );
 
 app.listen(port, () => `your are listening at the port ${port}`);
+
+// [String!]! this means that a list can be empty but not a list on nulls
