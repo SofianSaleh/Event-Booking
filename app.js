@@ -10,8 +10,15 @@ app.use(
   "/graphql",
   graphQlHttp({
     schema: buildSchema(`
+        type Event {
+            _id: ID!
+            name: String!
+            description: String!
+            price: Float!
+            date: String!
+        }
         type RootQuery {
-            events: [String!]!
+            events: [Event!]!
         }
 
         type RootMutation {
@@ -27,7 +34,7 @@ app.use(
       events: () => {
         return ["ss", "sssssss"];
       },
-      createEvent: () => {
+      createEvent: args => {
         const eventName = args.name;
         return eventName;
       }
@@ -36,6 +43,7 @@ app.use(
   })
 );
 
-app.listen(port, () => `your are listening at the port ${port}`);
+app.listen(port, () => console.log(`your are listening at the port ${port}`));
 
 // [String!]! this means that a list can be empty but not a list on nulls
+// events: [String!]! in query the right side is the type and the left side is the return
