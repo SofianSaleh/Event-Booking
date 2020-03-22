@@ -87,8 +87,9 @@ app.use(
             email: args.userInput.email,
             password: hashedPassword
           });
+          console.log(user);
           user.save();
-          return { ...user._doc };
+          return user;
         } catch (e) {
           throw e.message;
         }
