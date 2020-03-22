@@ -2,8 +2,10 @@ const express = require("express");
 const graphQlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const Event = require("./models/event");
+const User = require("./models/user");
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -21,12 +23,26 @@ app.use(
                 price: Float!
                 date: String!
             }
+
+            type User {
+                _id: ID!
+                username: String!
+                email: String!
+                password: String
+            }
+
             input EventInput {
                 title: String!
                 description: String!
                 price: Float!
                 date: String!
             } 
+
+            input UserInput {
+              username: String!
+              email: String!
+              password: String
+          } 
     
             type RootQuery {
                 events: [Event!]!
@@ -34,6 +50,7 @@ app.use(
     
             type RootMutation {
                 createEvent(eventInput: EventInput!): Event
+                createUser(userInput: UserInput!): User
             }
     
             schema{
