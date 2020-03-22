@@ -12,6 +12,33 @@ const app = express();
 
 app.use(express.json());
 
+const event = async eventIds => {
+  try {
+    let events = await Event.find({ _id: { $in: eventIds } })
+    return events.map(event => {
+      return {
+        ...event._doc,
+        creator: user.bind(this, event._doc.creator)
+      }
+    })
+
+  } catch (err) {
+    throw err
+  }
+}
+
+const user = async userId => {
+  try {
+    let creator = await User.findById(userId)
+    return {
+      ...creator._doc,
+      createdEvents: event.bind(this, creator._doc.createdEvents)
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
 app.use(
   "/graphql",
   graphQlHttp({
@@ -22,6 +49,7 @@ app.use(
                 description: String!
                 price: Float!
                 date: String!
+                creator: User!
             }
 
             type User {
@@ -29,6 +57,7 @@ app.use(
                 username: String!
                 email: String!
                 password: String
+                createdEvents: [Event!]
             }
 
             input EventInput {
@@ -63,10 +92,10 @@ app.use(
         try {
           const events = await Event.find();
           return events.map(event => {
-            return { ...event._doc };
+            return { ...event._doc, creator: user.bind(this, event._doc.creator) };
           });
         } catch (e) {
-          throw e.message;
+          throw e;
         }
       },
       createEvent: async args => {
@@ -78,10 +107,13 @@ app.use(
           creator: "5e77685e98e2b72ae43209ea"
         });
         await event.save();
-        const user = await User.findById("5e77685e98e2b72ae43209ea");
-        user.createdEvents.push(event);
-        await user.save();
-        return event;
+        const creatorOfTheEvent = await User.findById("5e77685e98e2b72ae43209ea");
+        creatorOfTheEvent.createdEvents.push(event);
+        await creatorOfTheEvent.save();
+        return {
+          ...event._doc,
+          creator: user.bind(this, event._doc.creator)
+        };
       },
       createUser: async args => {
         try {
@@ -111,7 +143,8 @@ app.use(
 mongoose
   .connect(`mongodb://localhost/${process.env.DATABASE_NAME}`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .then(() => {
     app.listen(port, () =>
