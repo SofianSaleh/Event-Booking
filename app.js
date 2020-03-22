@@ -69,26 +69,35 @@ app.use(
           throw e.message;
         }
       },
-      createEvent: args => {
+      createEvent: async args => {
         const event = new Event({
           title: args.eventInput.title,
           description: args.eventInput.description,
           price: +args.eventInput.price,
-          date: new Date(args.eventInput.date)
+          date: new Date(args.eventInput.date),
+          creator: "5e77685e98e2b72ae43209ea"
         });
-        event.save();
+        await event.save();
+        const user = await User.findById("5e77685e98e2b72ae43209ea");
+        user.createdEvents.push(event);
+        await user.save();
         return event;
       },
       createUser: async args => {
         try {
+          const oneUser = await User.findOne({ email: args.userInput.email });
+          if (!!oneUser) {
+            throw new Error(` User with the username: ${args.userInput.username} already exists
+            `);
+          }
           const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
           const user = new User({
             username: args.userInput.username,
             email: args.userInput.email,
             password: hashedPassword
           });
-          console.log(user);
           user.save();
+          user.password = null;
           return user;
         } catch (e) {
           throw e.message;
