@@ -10,7 +10,8 @@ const event = async eventIds => {
         return events.map(event => {
             return {
                 ...event._doc,
-                creator: user.bind(this, event._doc.creator)
+                date: new Date(event._doc.date).toISOString(),
+                creator: getUser.bind(this, event._doc.creator)
             }
         })
 
@@ -19,7 +20,7 @@ const event = async eventIds => {
     }
 }
 
-const user = async userId => {
+const getUser = async userId => {
     try {
         let creator = await User.findById(userId)
         return {
@@ -36,7 +37,11 @@ module.exports = {
         try {
             const events = await Event.find();
             return events.map(event => {
-                return { ...event._doc, creator: user.bind(this, event._doc.creator) };
+                return {
+                    ...event._doc,
+                    date: new Date(event._doc.date).toISOString(),
+                    creator: getUser.bind(this, event._doc.creator)
+                };
             });
         } catch (e) {
             throw e;
@@ -48,15 +53,16 @@ module.exports = {
             description: args.eventInput.description,
             price: +args.eventInput.price,
             date: new Date(args.eventInput.date),
-            creator: "5e77685e98e2b72ae43209ea"
+            creator: "5e77c5a5af297c06d4685bca"
         });
         await event.save();
-        const creatorOfTheEvent = await User.findById("5e77685e98e2b72ae43209ea");
+        const creatorOfTheEvent = await User.findById("5e77c5a5af297c06d4685bca");
         creatorOfTheEvent.createdEvents.push(event);
         await creatorOfTheEvent.save();
         return {
             ...event._doc,
-            creator: user.bind(this, event._doc.creator)
+            date: new Date(event._doc.date).toISOString(),
+            creator: getUser.bind(this, event._doc.creator)
         };
     },
     createUser: async args => {
@@ -72,7 +78,9 @@ module.exports = {
                 email: args.userInput.email,
                 password: hashedPassword
             });
-            user.save();
+
+            await user.save();
+
             user.password = null;
             return user;
         } catch (e) {
