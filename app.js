@@ -2,11 +2,13 @@ const express = require("express");
 const graphQlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 const mongoose = require("mongoose");
+
+const Event = require("./models/event");
+
 const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
-const events = [];
 
 app.use(
   "/graphql",
@@ -14,15 +16,16 @@ app.use(
     schema: buildSchema(`
             type Event {
                 _id: ID!
-                name: String!
+                title: String!
                 description: String!
                 price: Float!
                 date: String!
             }
             input EventInput {
-                name: String!
+                title: String!
                 description: String!
                 price: Float!
+                date: String!
             } 
     
             type RootQuery {
@@ -39,19 +42,24 @@ app.use(
             }
         `),
     rootValue: {
-      events: () => {
-        return events;
+      events: async () => {
+        try {
+          const events = await Event.find();
+          return events.map(event => {
+            return { ...event._doc };
+          });
+        } catch (e) {
+          throw e.message;
+        }
       },
       createEvent: args => {
-        console.log("---------------------------------------------------");
-        const event = {
-          _id: Math.floor(Math.random()),
-          name: args.eventInput.name,
+        const event = new Event({
+          title: args.eventInput.title,
           description: args.eventInput.description,
           price: +args.eventInput.price,
-          date: new Date().toISOString
-        };
-        events.push(event);
+          date: new Date(args.eventInput.date)
+        });
+        event.save();
         return event;
       }
     },
@@ -61,7 +69,8 @@ app.use(
 
 mongoose
   .connect(`mongodb://localhost/${process.env.DATABASE_NAME}`, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   })
   .then(() => {
     app.listen(port, () =>
