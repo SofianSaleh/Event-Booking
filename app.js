@@ -12,11 +12,10 @@ app.use(
     schema: buildSchema(`
         type RootQuery {
             events: [String!]!
-
         }
 
         type RootMutation {
-
+            createEvent(name:String!): String
         }
 
         schema{
@@ -24,7 +23,16 @@ app.use(
             mutation: RootMutation 
         }
     `),
-    rootValue: {}
+    rootValue: {
+      events: () => {
+        return ["ss", "sssssss"];
+      },
+      createEvent: () => {
+        const eventName = args.name;
+        return eventName;
+      }
+    },
+    graphiql: true
   })
 );
 
