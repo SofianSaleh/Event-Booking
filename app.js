@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
+const events = [];
 
 app.use(
   "/graphql",
@@ -17,12 +18,18 @@ app.use(
             price: Float!
             date: String!
         }
+        input EventInput {
+            name: String!
+            description: String!
+            price: Float!
+        } 
+
         type RootQuery {
             events: [Event!]!
         }
 
         type RootMutation {
-            createEvent(name:String!): String
+            createEvent(eventInput: EventInput!): Event
         }
 
         schema{
@@ -32,11 +39,19 @@ app.use(
     `),
     rootValue: {
       events: () => {
-        return ["ss", "sssssss"];
+        return events;
       },
       createEvent: args => {
-        const eventName = args.name;
-        return eventName;
+        console.log("---------------------------------------------------");
+        const event = {
+          _id: Math.floor(Math.random()),
+          name: args.eventInput.name,
+          description: args.eventInput.description,
+          price: +args.eventInput.price,
+          date: new Date().toISOString
+        };
+        events.push(event);
+        return event;
       }
     },
     graphiql: true
