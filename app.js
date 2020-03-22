@@ -78,6 +78,18 @@ app.use(
         });
         event.save();
         return event;
+      },
+      createUser: async args => {
+        try {
+          const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
+          const user = new User({
+            username: args.userInput.username,
+            email: args.userInput.email,
+            password: hashedPassword
+          });
+        } catch (e) {
+          throw e.message;
+        }
       }
     },
     graphiql: true
