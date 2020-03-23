@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 
 const Event = require("../../models/event");
 const User = require("../../models/user");
+const Booking = require("../../models/booking");
 
 
 const event = async eventIds => {
@@ -32,6 +33,18 @@ const getUser = async userId => {
     }
 }
 
+const getSingleEvent = async eventId => {
+    try {
+        const singleEvent = await Event.findById(eventId)
+        return {
+            ...singleEvent._doc,
+            creator: getUser.bind(this, singleEvent._doc.creator)
+        }
+    } catch (err) {
+        throw err
+    }
+}
+
 module.exports = {
     events: async () => {
         try {
@@ -45,6 +58,23 @@ module.exports = {
             });
         } catch (e) {
             throw e;
+        }
+    },
+    booking: async () => {
+        try {
+            const bookings = await Booking.find()
+            return bookings.map(booking => {
+                return {
+                    ...booking._doc,
+                    user: getUser.bind(this, booking._doc.user),
+                    event: getSingleEvent.bind(this, booking._doc.event),
+                    createdAt: new Date(booking._doc.createdAt).toISOString(),
+                    updatedAt: new Date(booking._doc.updatedAt).toISOString()
+                }
+
+            })
+        } catch (err) {
+            throw err
         }
     },
     createEvent: async args => {
@@ -85,6 +115,32 @@ module.exports = {
             return user;
         } catch (e) {
             throw e.message;
+        }
+    },
+    bookEvent: async args => {
+        try {
+            const fetchedEvent = await Event.findById(args.eventId)
+            const booking = new Booking({
+                user: "5e77c5a5af297c06d4685bca",
+                event: fetchedEvent
+            })
+            const result = await booking.save()
+            return {
+                ...result._doc,
+                user: getUser.bind(this, result._doc.user),
+                event: getSingleEvent.bind(this, result._doc.event),
+                createdAt: new Date(result._doc.createdAt).toISOString(),
+                updatedAt: new Date(result._doc.updatedAt).toISOString()
+            }
+        } catch (err) {
+            throw err
+        }
+    },
+    cancelBooking: async args => {
+        try {
+
+        } catch (err) {
+
         }
     }
 }
