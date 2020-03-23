@@ -1,3 +1,17 @@
+const Event = require("../../models/event");
+const Booking = require("../../models/booking");
+const User = require("../../models/user");
+const { dateToStringHelper } = require('../../helpers/date')
+
+
+const transformEvent = event => {
+    return {
+        ...event._doc,
+        date: dateToStringHelper(event._doc.date),
+        creator: getUser.bind(this, event._doc.creator)
+    }
+}
+
 const event = async eventIds => {
     try {
         let events = await Event.find({ _id: { $in: eventIds } })
@@ -39,3 +53,4 @@ const getSingleEvent = async eventId => {
 module.exports.event = event
 module.exports.getUser = getUser
 module.exports.getSingleEvent = getSingleEvent
+module.exports.transformEvent = transformEvent
