@@ -26,4 +26,13 @@ module.exports = {
             throw e.message;
         }
     },
+    login: async ({ email, password }) => {
+        try {
+            const user = await User.findOne({ email })
+            if (user)
+
+        } catch (err) {
+            throw err
+        }
+    }
 }
