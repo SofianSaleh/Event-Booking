@@ -29,15 +29,21 @@ module.exports = {
     },
     login: async ({ email, password }) => {
         try {
+            console.log(process.env)
             const user = await User.findOne({ email })
             if (!user) {
                 throw new Error(`User doesn't exist`)
             }
-            const isEqual = await bcrypt.compare(password, user._dox.password)
+            const isEqual = await bcrypt.compare(password, user._doc.password)
             if (!isEqual) {
                 throw new Error(`Password is incorrect`)
             }
-            const token = jwt.sign({ userId: user.id, email: user._doc.email })
+            const token = jwt.sign({ userId: user.id, email: user._doc.email }, process.env.JWT_SECRET, { expiresIn: "10s" })
+            return {
+                userId: user.id,
+                token,
+                tokenExpiration: "15 sec"
+            }
         } catch (err) {
             throw err
         }
