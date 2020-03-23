@@ -1,0 +1,41 @@
+const event = async eventIds => {
+    try {
+        let events = await Event.find({ _id: { $in: eventIds } })
+        return events.map(event => {
+            return transformEvent(event)
+        })
+
+    } catch (err) {
+        throw err
+    }
+}
+
+const getUser = async userId => {
+    try {
+        let creator = await User.findById(userId)
+        console.log(creator)
+        return {
+            ...creator._doc,
+            createdEvents: event.bind(this, creator._doc.createdEvents)
+        }
+    } catch (err) {
+        throw err
+    }
+}
+
+const getSingleEvent = async eventId => {
+    try {
+        const singleEvent = await Event.findById(eventId)
+        console.log(singleEvent)
+        return {
+            ...singleEvent._doc,
+            creator: getUser.bind(this, singleEvent._doc.creator)
+        }
+    } catch (err) {
+        throw err
+    }
+}
+
+module.exports.event = event
+module.exports.getUser = getUser
+module.exports.getSingleEvent = getSingleEvent
