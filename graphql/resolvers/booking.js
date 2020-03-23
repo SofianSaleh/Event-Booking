@@ -17,7 +17,10 @@ const transformBooking = booking => {
 
 
 module.exports = {
-    bookings: async () => {
+    bookings: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error(`UnAuthorized`)
+        }
         try {
             const bookings = await Booking.find()
             return bookings.map(booking => {
@@ -28,11 +31,14 @@ module.exports = {
             throw err
         }
     },
-    bookEvent: async args => {
+    bookEvent: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error(`UnAuthorized`)
+        }
         try {
             const fetchedEvent = await Event.findById(args.eventId)
             const booking = new Booking({
-                user: "5e77c5a5af297c06d4685bca",
+                user: req.user.userId,
                 event: fetchedEvent
             })
             const result = await booking.save()
@@ -42,7 +48,10 @@ module.exports = {
             throw err
         }
     },
-    cancelBooking: async args => {
+    cancelBooking: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error(`UnAuthorized`)
+        }
         try {
             const deletedEvent = await Booking.findByIdAndDelete({ _id: args.bookingId })
             return transformBooking(deletedEvent)

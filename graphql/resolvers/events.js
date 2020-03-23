@@ -17,16 +17,19 @@ module.exports = {
             throw e;
         }
     },
-    createEvent: async args => {
+    createEvent: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error(`UnAuthorized`)
+        }
         const event = new Event({
             title: args.eventInput.title,
             description: args.eventInput.description,
             price: +args.eventInput.price,
             date: dateToStringHelper(args.eventInput.date),
-            creator: "5e77c5a5af297c06d4685bca"
+            creator: req.user.userId
         });
         await event.save();
-        const creatorOfTheEvent = await User.findById("5e77c5a5af297c06d4685bca");
+        const creatorOfTheEvent = await User.findById(req.user.userId);
         creatorOfTheEvent.createdEvents.push(event);
         await creatorOfTheEvent.save();
         return transformEvent(event);

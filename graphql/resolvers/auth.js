@@ -29,7 +29,6 @@ module.exports = {
     },
     login: async ({ email, password }) => {
         try {
-            console.log(process.env)
             const user = await User.findOne({ email })
             if (!user) {
                 throw new Error(`User doesn't exist`)
@@ -38,7 +37,7 @@ module.exports = {
             if (!isEqual) {
                 throw new Error(`Password is incorrect`)
             }
-            const token = jwt.sign({ userId: user.id, email: user._doc.email, username: user._doc.username }, process.env.JWT_SECRET, { expiresIn: "10s" })
+            const token = jwt.sign({ userId: user.id, email: user._doc.email, username: user._doc.username }, process.env.JWT_SECRET, { expiresIn: "15s" })
             return {
                 userId: user.id,
                 username: user._doc.username,
