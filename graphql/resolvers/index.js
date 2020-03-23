@@ -24,6 +24,7 @@ const event = async eventIds => {
 const getUser = async userId => {
     try {
         let creator = await User.findById(userId)
+        console.log(creator)
         return {
             ...creator._doc,
             createdEvents: event.bind(this, creator._doc.createdEvents)
@@ -36,6 +37,7 @@ const getUser = async userId => {
 const getSingleEvent = async eventId => {
     try {
         const singleEvent = await Event.findById(eventId)
+        console.log(singleEvent)
         return {
             ...singleEvent._doc,
             creator: getUser.bind(this, singleEvent._doc.creator)
@@ -60,7 +62,7 @@ module.exports = {
             throw e;
         }
     },
-    booking: async () => {
+    bookings: async () => {
         try {
             const bookings = await Booking.find()
             return bookings.map(booking => {
@@ -138,9 +140,17 @@ module.exports = {
     },
     cancelBooking: async args => {
         try {
+            const deletedEvent = await Booking.findByIdAndDelete({ _id: args.bookingId })
+            return {
+                ...deletedEvent._doc,
+                event: getSingleEvent.bind(this, deletedEvent._doc.event),
+                user: getUser.bind(this, deletedEvent._doc.user),
+                createdAt: new Date(deletedEvent._doc.createdAt).toISOString(),
+                updatedAt: new Date(deletedEvent._doc.updatedAt).toISOString()
+            }
 
         } catch (err) {
-
+            throw err
         }
     }
 }
