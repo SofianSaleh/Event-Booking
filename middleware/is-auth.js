@@ -13,7 +13,17 @@ module.exports = (req, res, next) => {
     }
     let decodedToken
     try {
-        decodedToken = 
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        if (!decodedToken) {
+            req.isAuth = false
+            return next()
+        }
+        req.isAuth = true
+        req.user = {
+            userId: decodedToken.userId,
+            username: decodedToken.username
+        }
+        next()
     } catch (err) {
         req.isAuth = false
         return next()

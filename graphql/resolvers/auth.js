@@ -38,9 +38,10 @@ module.exports = {
             if (!isEqual) {
                 throw new Error(`Password is incorrect`)
             }
-            const token = jwt.sign({ userId: user.id, email: user._doc.email }, process.env.JWT_SECRET, { expiresIn: "10s" })
+            const token = jwt.sign({ userId: user.id, email: user._doc.email, username: user._doc.username }, process.env.JWT_SECRET, { expiresIn: "10s" })
             return {
                 userId: user.id,
+                username: user._doc.username,
                 token,
                 tokenExpiration: "15 sec"
             }

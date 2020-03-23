@@ -27,6 +27,7 @@ type User {
 
 type AuthData {
     userId:ID!
+    username:String!
     token: String!
     tokenExpiration: String!
 }
