@@ -3,8 +3,8 @@ import { LOGIN_FAIL, LOGIN_SUCCESS, USER_LOADED, USER_LOADING } from '../actions
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
+    loading: false,
     user: null,
-    loading: false
 }
 //  the action has { type and payload }
 

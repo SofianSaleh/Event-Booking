@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { LOGIN_FAIL, LOGIN_SUCCESS, USER_LOADED, USER_LOADING } from './types'
 
-export const login = ({ email, password }) => {
+export const login = ({ email, password }) => dispatch => {
     //  this config obj has the headers we have to specifiy them for the backend to understand
     const config = {
         headers: {
@@ -21,12 +21,12 @@ export const login = ({ email, password }) => {
         `
     }
     axios.post(`http://localhost:8000/graphql`, body, config).then(res => {
-        dispatchEvent({
+        dispatch({
             action: LOGIN_SUCCESS,
             payload: res.data
         })
     }).catch(err => {
-        dispatchEvent({
+        dispatch({
             type: LOGIN_FAIL
         })
     })

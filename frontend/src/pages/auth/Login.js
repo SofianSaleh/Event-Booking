@@ -11,7 +11,7 @@ export class Login extends Component {
     };
 
     static propTypes = {
-        isAuthinticated: PropTypes.bool.isRequired
+        isAuthenticated: PropTypes.bool
     }
 
     onSubmit = e => {
@@ -68,7 +68,7 @@ export class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    isAuthinticated: state.auth.isAuthinticated
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, { login })(Login);
