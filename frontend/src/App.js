@@ -14,9 +14,9 @@ function App() {
         <Fragment>
           <Navbar />
           <Switch>
-            <Redirect from="/" to="/auth" exact />
-            <Route path="/auth/login" component={AuthPage} />
-            <Route path="/auth/signup" component={AuthPage} />
+            <Redirect from="/" to="/events" exact />
+            <Route path="/auth/login" component={Login} />
+            <Route path="/auth/signup" component={Signup} />
             <Route path="/events" component={Events} />
             <Route path="/bookings" component={Bookings} />
           </Switch>
