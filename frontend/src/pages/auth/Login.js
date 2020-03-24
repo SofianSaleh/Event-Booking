@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-// import { login } from '../../actions/auth'
+import { login } from '../../actions/auth'
 import PropTypes from 'prop-types'
 
 export class Login extends Component {
@@ -22,6 +22,9 @@ export class Login extends Component {
     onChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
+        if (this.props.isAuthenticated) {
+            return <Redirect from="/auth/login" to="/events" exact />
+        }
         const { email, password } = this.state
         return (
             <div className="col-md-6 m-auto">
@@ -71,4 +74,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps, { login })(Login);

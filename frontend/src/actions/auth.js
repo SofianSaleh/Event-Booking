@@ -37,7 +37,7 @@ export const signUp = ({ username, email, password }) => dispatch => {
     })
 }
 
-export const login = ({ emial, password }) => dispatch => {
+export const login = ({ email, password }) => dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ export const login = ({ emial, password }) => dispatch => {
         console.log(res.data.data)
         dispatch({
             type: LOGIN_SUCCESS,
-            payload: res.data.data.createUser
+            payload: res.data.data.login
         })
     }).catch(err => {
         alert(`ERRRRRRROR`)
