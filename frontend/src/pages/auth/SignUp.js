@@ -44,6 +44,7 @@ export class SignUp extends Component {
                                 name="username"
                                 onChange={this.onChange.bind(this)}
                                 value={username}
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -54,6 +55,7 @@ export class SignUp extends Component {
                                 name="email"
                                 onChange={this.onChange.bind(this)}
                                 value={email}
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -64,6 +66,7 @@ export class SignUp extends Component {
                                 name="password"
                                 onChange={this.onChange.bind(this)}
                                 value={password}
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -74,6 +77,7 @@ export class SignUp extends Component {
                                 name="confirmPassword"
                                 onChange={this.onChange.bind(this)}
                                 value={confirmPassword}
+                                required
                             />
                         </div>
                         <div className="form-group">

@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { login } from '../../actions/auth'
+import PropTypes from 'prop-types'
 
 export class Login extends Component {
     state = {
@@ -7,9 +10,13 @@ export class Login extends Component {
         password: ""
     };
 
+    static propTypes = {
+        isAuthinticated: PropTypes.bool.isRequired
+    }
+
     onSubmit = e => {
         e.preventDefault();
-        this.props.login(this.state.username, this.state.password);
+        this.props.login({ email: this.state.email, password: this.state.password });
     };
 
     onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -22,13 +29,14 @@ export class Login extends Component {
                     <h2 className="text-center">Login</h2>
                     <form onSubmit={this.onSubmit.bind(this)}>
                         <div className="form-group">
-                            <label>Username</label>
+                            <label>E-mail</label>
                             <input
                                 type="text"
                                 className="form-control"
-                                name="username"
+                                name="email"
                                 onChange={this.onChange.bind(this)}
                                 value={email}
+                                required
                             />
                         </div>
 
@@ -40,6 +48,7 @@ export class Login extends Component {
                                 name="password"
                                 onChange={this.onChange.bind(this)}
                                 value={password}
+                                required
                             />
                         </div>
 
@@ -58,4 +67,8 @@ export class Login extends Component {
     }
 }
 
-export default Login
+const mapStateToProps = (state) => ({
+    isAuthinticated: state.auth.isAuthinticated
+})
+
+export default connect(mapStateToProps, { login })(Login);
