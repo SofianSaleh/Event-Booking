@@ -1,10 +1,10 @@
-import { LOGIN_FAIL, LOGIN_SUCCESS, USER_LOADED, USER_LOADING } from '../actions/types'
+import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING } from '../actions/types'
 
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
     loading: false,
-    user: null,
+    user: null
 }
 //  the action has { type and payload }
 
@@ -25,7 +25,9 @@ export default (state = initialState, { type, payload }) => {
                 loading: false
             }
 
-        case LOGIN_SUCCESS:
+        case SIGNUP_SUCCESS:
+            console.log(`SIGNUP SUCCESS __________________-------`)
+            console.log(payload, payload.token)
             localStorage.setItem("token", payload.token)
             return {
                 ...state,
@@ -35,7 +37,9 @@ export default (state = initialState, { type, payload }) => {
                 loading: false
             }
 
-        case LOGIN_FAIL:
+        case SIGNUP_FAIL:
+            console.log(`SIGNUP FAIL __________________-------`)
+
             localStorage.removeItem("token")
             return {
                 ...state,

@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect } from 'react-router-dom'
+
+import { connect } from "react-redux"
+import { signUp } from "../../actions/auth"
+
+import PropTypes from 'prop-types'
+
 
 export class SignUp extends Component {
     state = {
@@ -8,19 +14,23 @@ export class SignUp extends Component {
         password: "",
         confirmPassword: ""
     };
+    static propTypes = {
+        isAuthenticated: PropTypes.bool
+    }
 
     onSubmit(e) {
         e.preventDefault();
         const { username, email, password, confirmPassword } = this.state;
         if (password !== confirmPassword) {
-            this.props.createMessage({ passwordNotMatch: "Passwords Didn't match" });
+            // this.props.createMessage({ passwordNotMatch: "Passwords Didn't match" });
+            alert(`passwords doesn't match`)
         } else {
             const newUser = {
                 username,
                 password,
                 email
             };
-            this.props.register(newUser);
+            this.props.signUp(newUser);
         }
     }
 
@@ -29,6 +39,10 @@ export class SignUp extends Component {
     }
 
     render() {
+        // Todo: when signing up redirect to sign in with the email
+        if (this.props.isAuthenticated) {
+            return <Redirect from="/auth/signup" to='/events' exact />
+        }
         const { username, confirmPassword, email, password } = this.state
 
         return (
@@ -95,4 +109,8 @@ export class SignUp extends Component {
     }
 }
 
-export default SignUp
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps, { signUp })(SignUp);

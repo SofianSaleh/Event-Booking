@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { LOGIN_FAIL, LOGIN_SUCCESS, USER_LOADED, USER_LOADING } from './types'
+import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING, LOGIN_SUCCESS, LOGIN_FAIL } from './types'
 
-export const login = ({ email, password }) => dispatch => {
+export const signUp = ({ username, email, password }) => dispatch => {
     //  this config obj has the headers we have to specifiy them for the backend to understand
     const config = {
         headers: {
@@ -12,20 +12,59 @@ export const login = ({ email, password }) => dispatch => {
     const body = {
         query: `
         mutation {
-            createUser(userInput: {email:"${email}", password:"${password}"}){
-                _id
+            createUser(userInput: {username:"${username}", email:"${email}", password:"${password}"}){
+                userId
                 username
-                token
+                email
+                token 
+                tokenExpiration
             }
         }
         `
     }
     axios.post(`http://localhost:8000/graphql`, body, config).then(res => {
+        console.log(res.data.data)
         dispatch({
-            action: LOGIN_SUCCESS,
-            payload: res.data
+            type: SIGNUP_SUCCESS,
+            payload: res.data.data.createUser
         })
     }).catch(err => {
+        alert(`ERRRRRRROR`)
+        console.log(err)
+        dispatch({
+            type: SIGNUP_FAIL
+        })
+    })
+}
+
+export const login = ({ emial, password }) => dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    const body = {
+        query: `
+        query {
+            login( email:"${email}", password:"${password}" ){
+                userId
+                username
+                email
+                token 
+                tokenExpiration
+            }
+        }
+        `
+    }
+    axios.post(`http://localhost:8000/graphql`, body, config).then(res => {
+        console.log(res.data.data)
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: res.data.data.createUser
+        })
+    }).catch(err => {
+        alert(`ERRRRRRROR`)
+        console.log(err)
         dispatch({
             type: LOGIN_FAIL
         })

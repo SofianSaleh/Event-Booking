@@ -3,13 +3,18 @@ const graphQlHttp = require("express-graphql");
 const mongoose = require("mongoose");
 const isAuth = require('./middleware/is-auth')
 
+const cors = require('cors')
+
 const graphqlSchema = require('./graphql/schema/index')
 const graphqlResolvers = require('./graphql/resolvers/index')
 
 const port = process.env.PORT || 3000;
 const app = express();
 
+app.use(cors())
+
 app.use(express.json());
+
 /**
  * this will run on each request
  * this route doesn't throw any error it just indicates if the user is autenticated or not

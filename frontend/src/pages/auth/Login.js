@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { login } from '../../actions/auth'
+// import { login } from '../../actions/auth'
 import PropTypes from 'prop-types'
 
 export class Login extends Component {
@@ -71,4 +71,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps)(Login);

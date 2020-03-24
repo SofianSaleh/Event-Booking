@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken')
 
 const User = require("../../models/user");
 
+const tokenRelated = (user) => {
+    const token = jwt.sign({ userId: user.id, email: user._doc.email, username: user._doc.username }, process.env.JWT_SECRET, { expiresIn: "15s" })
+    return token
+}
 
 module.exports = {
     createUser: async args => {
@@ -22,7 +26,14 @@ module.exports = {
             await user.save();
 
             user.password = null;
-            return user;
+            const token = tokenRelated(user)
+            return {
+                userId: user._id,
+                username: user.username,
+                email: user.email,
+                token,
+                tokenExpiration: '15 sec'
+            };
         } catch (e) {
             throw e.message;
         }
@@ -37,7 +48,7 @@ module.exports = {
             if (!isEqual) {
                 throw new Error(`Password is incorrect`)
             }
-            const token = jwt.sign({ userId: user.id, email: user._doc.email, username: user._doc.username }, process.env.JWT_SECRET, { expiresIn: "15s" })
+            const token = tokenRelated(user)
             return {
                 userId: user.id,
                 username: user._doc.username,
