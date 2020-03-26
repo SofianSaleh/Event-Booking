@@ -1,8 +1,15 @@
 
 import React, { Component, Fragment } from "react";
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux'
+import { logout } from ' ../actions/auth'
+import PropTypes from 'prop-types'
 
 class Navbar extends Component {
+    static proptypes = {
+
+    }
+
 
     render() {
         return (
@@ -21,6 +28,15 @@ class Navbar extends Component {
                             <li className="nav-item">
                                 <NavLink className="nav-link" to="/bookings">Bookings</NavLink>
                             </li>
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/auth/login">Login</NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/auth/signup">Sign Up</NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <button className="nav-link" onClick={logout.bind(this)}>Logout</button>
+                            </li>
 
                         </ul>
                         {/* <form className="form-inline my-2 my-lg-0">
@@ -34,4 +50,10 @@ class Navbar extends Component {
     }
 }
 
-export default Navbar
+const mapStateToProps = (state) => ({
+
+})
+
+
+
+export default connect(mapStateToProps, { logout })(Navbar);
