@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING, LOGIN_SUCCESS, LOGIN_FAIL } from './types'
+import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS } from './types'
 
 export const signUp = ({ username, email, password }) => dispatch => {
     //  this config obj has the headers we have to specifiy them for the backend to understand
@@ -68,5 +68,11 @@ export const login = ({ email, password }) => dispatch => {
         dispatch({
             type: LOGIN_FAIL
         })
+    })
+}
+
+export const logout = () => dispatch => {
+    dispatch({
+        type: LOGOUT_SUCCESS
     })
 }

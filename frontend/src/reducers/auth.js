@@ -1,4 +1,4 @@
-import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING, LOGIN_SUCCESS, LOGIN_FAIL } from '../actions/types'
+import { SIGNUP_FAIL, SIGNUP_SUCCESS, USER_LOADED, USER_LOADING, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS } from '../actions/types'
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -40,6 +40,7 @@ export default (state = initialState, { type, payload }) => {
 
         case SIGNUP_FAIL:
         case LOGIN_FAIL:
+        case LOGOUT_SUCCESS:
             console.log(`SIGNUP FAIL __________________-------`)
 
             localStorage.removeItem("token")

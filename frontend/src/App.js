@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
+import PrivateRoutes from "./common/PrivateRoutes";
 
 import { Provider } from 'react-redux'
 import store from './store'
@@ -23,7 +24,7 @@ function App() {
               <Route path="/auth/login" component={Login} />
               <Route path="/auth/signup" component={Signup} />
               <Route path="/events" component={Events} />
-              <Route path="/bookings" component={Bookings} />
+              <PrivateRoutes exact path="/bookings" component={Bookings} />
             </Switch>
           </Fragment>
         </div>
