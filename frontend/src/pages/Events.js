@@ -1,13 +1,26 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+
+import PropTypes from "prop-types";
+
+import CreateEvent from "../modals/CreateEvent";
 
 export class Events extends Component {
-    render() {
-        return (
-            <div>
-                <h1>This Is The Events Page</h1>
-            </div>
-        )
-    }
+  static propTypes = {
+    isAuthenticated: PropTypes.bool
+  };
+  render() {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <h1>This Is The Events Page</h1>
+        <CreateEvent />
+      </div>
+    );
+  }
 }
 
-export default Events
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Events);
