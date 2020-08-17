@@ -9,6 +9,7 @@ export class Events extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool
   };
+
   render() {
     return (
       <div style={{ textAlign: "center" }}>
